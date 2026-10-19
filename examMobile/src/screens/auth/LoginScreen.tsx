@@ -29,8 +29,8 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 export const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('camille.martin@exemple.fr');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('livio.delenclos@test.fr');
+  const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -42,9 +42,12 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
     setError('');
     setLoading(true);
     try {
-      await login(email);
+      const res = await login(email, password);
+      if (!res.success) {
+        setError(t(res.error || 'auth.errorInvalidCredentials'));
+      }
     } catch {
-      Alert.alert(t('auth.appName'), t('auth.errorInvalidCredentials'));
+      setError(t('auth.errorInvalidCredentials'));
     } finally {
       setLoading(false);
     }

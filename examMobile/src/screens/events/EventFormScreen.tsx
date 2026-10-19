@@ -63,6 +63,17 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
     setError('');
     setLoading(true);
 
+    const normalizeDate = (rawDate: string): string => {
+      const trimmed = rawDate.trim();
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(trimmed)) {
+        const [d, m, y] = trimmed.split('/');
+        return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+      }
+      return trimmed;
+    };
+
+    const finalDate = normalizeDate(date);
+
     try {
       if (isEditing && eventId) {
         const existing = getEventById(eventId);
@@ -71,7 +82,7 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
             ...existing,
             title: title.trim(),
             description: description.trim(),
-            date: date.trim(),
+            date: finalDate,
             time: time.trim() || '18h00',
             location: location.trim(),
           });
@@ -80,10 +91,10 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
         await addEvent({
           title: title.trim(),
           description: description.trim(),
-          date: date.trim(),
+          date: finalDate,
           time: time.trim() || '18h00',
           location: location.trim(),
-          distanceKm: 2.5, // Distance par défaut calculée
+          distanceKm: 2.5,
           weather: {
             condition: 'Ensoleillé',
             temperature: 18,
@@ -92,7 +103,7 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
       }
       navigation.goBack();
     } catch {
-      Alert.alert(t('auth.appName'), t('form.errorRequired'));
+      setError(t('form.errorRequired'));
     } finally {
       setLoading(false);
     }

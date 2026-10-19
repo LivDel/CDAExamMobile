@@ -8,7 +8,12 @@ export interface User {
   email: string;
 }
 
+export interface UserAccount extends User {
+  password: string;
+}
+
 export interface AuthState {
   user: User | null;
   isLoading: boolean;
 }
+

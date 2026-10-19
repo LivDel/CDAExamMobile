@@ -22,6 +22,7 @@ import { theme } from '../../constants/theme';
 import { t } from '../../i18n';
 import { useAuth } from '../../context/AuthContext';
 import { useEvents } from '../../context/EventsContext';
+import { confirmAction } from '../../utils/alert';
 
 export const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<EventsStackParamList>>();
@@ -44,19 +45,14 @@ export const ProfileScreen: React.FC = () => {
   }, [events]);
 
   const handleLogout = () => {
-    Alert.alert(
+    confirmAction(
       t('auth.logoutConfirmTitle'),
       t('auth.logoutConfirmMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('profile.logoutButton'),
-          style: 'destructive',
-          onPress: async () => {
-            await logout();
-          },
-        },
-      ]
+      async () => {
+        await logout();
+      },
+      t('profile.logoutButton'),
+      t('common.cancel')
     );
   };
 

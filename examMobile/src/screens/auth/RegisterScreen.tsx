@@ -45,7 +45,10 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     setError('');
     setLoading(true);
     try {
-      await register(name, email);
+      const res = await register(name, email, password);
+      if (!res.success) {
+        setError(t(res.error || 'auth.errorInvalidCredentials'));
+      }
     } catch {
       setError(t('auth.errorInvalidCredentials'));
     } finally {

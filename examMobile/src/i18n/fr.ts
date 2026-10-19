@@ -51,6 +51,7 @@ export const fr = {
     errorInvalidEmail: 'Veuillez entrer une adresse e-mail valide.',
     errorShortPassword: 'Le mot de passe doit comporter au moins 6 caractères.',
     errorInvalidCredentials: 'Email ou mot de passe incorrect.',
+    errorEmailExists: 'Un compte existe déjà avec cette adresse e-mail.',
     logoutConfirmTitle: 'Déconnexion',
     logoutConfirmMessage: 'Êtes-vous sûr de vouloir vous déconnecter ?',
   },

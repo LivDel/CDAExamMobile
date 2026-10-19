@@ -1,17 +1,17 @@
 /**
  * Contexte d'authentification pour gérer la session utilisateur
- * Simple, lisible, utilise React Context API
+ * Authentification dynamique locale avec persistance AsyncStorage
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User } from '../types/user';
-import { storageService, DEFAULT_USER } from '../services/storage';
+import { User, UserAccount } from '../types/user';
+import { storageService } from '../services/storage';
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string) => Promise<boolean>;
-  register: (name: string, email: string) => Promise<boolean>;
+  login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -21,47 +21,97 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Chargement initial de la session
+  // Chargement de la session existante sans connexion forcée
   useEffect(() => {
-    async function loadUser() {
+    async function initAuth() {
+      // Préparer les comptes démo au premier lancement
+      await storageService.getAccounts();
       const storedUser = await storageService.getUser();
-      // Si aucun utilisateur n'existe encore, on connecte par défaut Camille pour faciliter la démo
       if (storedUser) {
         setUser(storedUser);
       } else {
-        await storageService.saveUser(DEFAULT_USER);
-        setUser(DEFAULT_USER);
+        // L'utilisateur reste déconnecté pour afficher l'écran de connexion / inscription
+        setUser(null);
       }
       setIsLoading(false);
     }
-    loadUser();
+    initAuth();
   }, []);
 
-  const login = async (email: string): Promise<boolean> => {
+  const login = async (
+    email: string,
+    password?: string
+  ): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    // Authentification simplifiée sans backend réel (exigence du cahier des charges)
-    const activeUser: User = {
-      id: user?.id || 'user-' + Date.now(),
-      name: user?.name || email.split('@')[0] || 'Camille Martin',
-      email: email.trim().toLowerCase(),
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password?.trim() || '';
+
+    const accounts = await storageService.getAccounts();
+    const matchedAccount = accounts.find(
+      (acc) => acc.email.toLowerCase() === cleanEmail
+    );
+
+    if (!matchedAccount) {
+      setIsLoading(false);
+      return { success: false, error: 'auth.errorInvalidCredentials' };
+    }
+
+    if (cleanPassword && matchedAccount.password && matchedAccount.password !== cleanPassword) {
+      setIsLoading(false);
+      return { success: false, error: 'auth.errorInvalidCredentials' };
+    }
+
+    const sessionUser: User = {
+      id: matchedAccount.id,
+      name: matchedAccount.name,
+      email: matchedAccount.email,
     };
-    await storageService.saveUser(activeUser);
-    setUser(activeUser);
+
+    await storageService.saveUser(sessionUser);
+    setUser(sessionUser);
     setIsLoading(false);
-    return true;
+    return { success: true };
   };
 
-  const register = async (name: string, email: string): Promise<boolean> => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    const newUser: User = {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = name.trim();
+    const cleanPassword = password.trim();
+
+    const accounts = await storageService.getAccounts();
+    const existing = accounts.find(
+      (acc) => acc.email.toLowerCase() === cleanEmail
+    );
+
+    if (existing) {
+      setIsLoading(false);
+      return { success: false, error: 'auth.errorEmailExists' };
+    }
+
+    const newAccount: UserAccount = {
       id: 'user-' + Date.now(),
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
+      name: cleanName,
+      email: cleanEmail,
+      password: cleanPassword,
     };
-    await storageService.saveUser(newUser);
-    setUser(newUser);
+
+    await storageService.saveAccount(newAccount);
+
+    const sessionUser: User = {
+      id: newAccount.id,
+      name: newAccount.name,
+      email: newAccount.email,
+    };
+
+    await storageService.saveUser(sessionUser);
+    setUser(sessionUser);
     setIsLoading(false);
-    return true;
+    return { success: true };
   };
 
   const logout = async (): Promise<void> => {

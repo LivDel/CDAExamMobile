@@ -20,6 +20,7 @@ import { AppButton } from '../../components/common/AppButton';
 import { theme } from '../../constants/theme';
 import { t } from '../../i18n';
 import { useEvents } from '../../context/EventsContext';
+import { confirmAction } from '../../utils/alert';
 
 type Props = NativeStackScreenProps<EventsStackParamList, 'EventDetail'>;
 
@@ -45,22 +46,17 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     );
   }
 
-  // Confirmation avant suppression
+  // Confirmation avant suppression (fonctionne sur Web et Mobile)
   const handleDelete = () => {
-    Alert.alert(
+    confirmAction(
       t('events.deleteTitle'),
       t('events.deleteConfirm'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: async () => {
-            await deleteEvent(event.id);
-            navigation.goBack();
-          },
-        },
-      ]
+      async () => {
+        await deleteEvent(event.id);
+        navigation.goBack();
+      },
+      t('common.delete'),
+      t('common.cancel')
     );
   };
 
