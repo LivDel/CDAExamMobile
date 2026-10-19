@@ -1,0 +1,136 @@
+/**
+ * Dictionnaire de traduction en langue française
+ * AUCUN texte en dur dans l'application
+ */
+
+export const fr = {
+  common: {
+    loading: 'Chargement...',
+    confirm: 'Confirmer',
+    cancel: 'Annuler',
+    delete: 'Supprimer',
+    edit: 'Modifier',
+    save: 'Enregistrer',
+    close: 'Fermer',
+    back: 'Retour',
+    km: 'km',
+    m: 'm',
+  },
+
+  navigation: {
+    tabEvents: 'Événements',
+    tabCalendar: 'Calendrier',
+    tabProfile: 'Profil',
+  },
+
+  auth: {
+    appName: 'EventEase',
+    appTagline: 'Vos événements, simplement.',
+    welcomeBack: 'Content de vous revoir',
+    loginSubtitle: "Connectez-vous pour retrouver les événements de l'association.",
+    emailLabel: 'Adresse e-mail',
+    emailPlaceholder: 'prenom.nom@exemple.fr',
+    passwordLabel: 'Mot de passe',
+    passwordPlaceholder: 'Votre mot de passe',
+    loginButton: 'Se connecter',
+    loginFooterNote: 'Vos données restent sur votre téléphone.',
+    noAccount: 'Nouveau ici ?',
+    createAccountLink: 'Créer un compte',
+
+    welcomeRegister: 'Bienvenue parmi nous',
+    registerSubtitle: 'Créez votre compte en quelques secondes pour consulter et organiser les événements.',
+    nameLabel: 'Prénom et nom',
+    namePlaceholder: 'Camille Martin',
+    registerPasswordPlaceholder: '6 caractères minimum',
+    registerButton: 'Créer mon compte',
+    registerFooterNote: "Aucune donnée n'est envoyée sur un serveur.",
+    alreadyMember: 'Déjà membre ?',
+    loginLink: 'Se connecter',
+
+    errorEmptyFields: 'Veuillez remplir tous les champs obligatoires.',
+    errorInvalidEmail: 'Veuillez entrer une adresse e-mail valide.',
+    errorShortPassword: 'Le mot de passe doit comporter au moins 6 caractères.',
+    errorInvalidCredentials: 'Email ou mot de passe incorrect.',
+    logoutConfirmTitle: 'Déconnexion',
+    logoutConfirmMessage: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+  },
+
+  events: {
+    greeting: 'Bonjour %{name}',
+    myEventsTitle: 'Vos événements',
+    tabAll: 'Tous',
+    tabUpcoming: 'À venir',
+    tabParticipated: 'Participés',
+    countEvents_one: '%{count} événement',
+    countEvents_other: '%{count} événements',
+    statusUpcoming: 'À venir',
+    statusParticipated: 'Participé',
+    newEventButton: '+ Nouvel événement',
+    emptyList: 'Aucun événement pour le moment',
+    emptyFilter: 'Aucun événement dans cette catégorie',
+    distanceFormatKm: 'à %{distance} km',
+    distanceFormatM: 'à %{distance} m',
+    upcomingInDays: 'À venir · dans %{days} jours',
+    upcomingToday: "À venir · aujourd'hui",
+    upcomingTomorrow: 'À venir · demain',
+    sectionDateTime: 'Date et heure',
+    sectionLocation: 'Lieu',
+    distanceFromYou: 'à %{distance} de vous',
+    sectionWeather: 'Météo prévue',
+    weatherForecastNote: "Prévision pour le jour de l'événement",
+    sectionAbout: 'À propos',
+    actionMarkParticipated: 'Marquer comme participé',
+    actionCancelParticipation: 'Annuler ma participation',
+    deleteTitle: "Supprimer l'événement",
+    deleteConfirm: 'Voulez-vous vraiment supprimer cet événement ?',
+    deleteSuccess: 'Événement supprimé avec succès.',
+  },
+
+  form: {
+    createTitle: 'Nouvel événement',
+    editTitle: "Modifier l'événement",
+    titleLabel: 'Titre',
+    titlePlaceholder: 'Ex. Atelier couture zéro déchet',
+    descriptionLabel: 'Description',
+    descriptionPlaceholder: "De quoi s'agit-il ? Qui peut venir ?",
+    dateLabel: 'Date',
+    datePlaceholder: 'JJ/MM/AAAA',
+    timeLabel: 'Heure',
+    timePlaceholder: 'HH:MM',
+    locationLabel: 'Lieu',
+    locationPlaceholder: 'Adresse ou nom du lieu',
+    locationHint: 'Nous l' + "'" + 'utilisons pour afficher la distance depuis votre position.',
+    saveButton: "Enregistrer l'événement",
+    cancelButton: 'Annuler',
+    errorRequired: 'Veuillez remplir tous les champs obligatoires.',
+    errorDateFormat: 'Veuillez respecter le format de date JJ/MM/AAAA.',
+    errorTimeFormat: "Veuillez respecter le format d'heure HH:MM.",
+  },
+
+  calendar: {
+    title: 'Calendrier',
+    legendUpcoming: 'À venir',
+    legendParticipated: 'Participé',
+    selectedDayEventsTitle: 'Événements du jour',
+    emptyDay: 'Aucun événement prévu pour cette date',
+    daysShort: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+    months: [
+      'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+      'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+    ],
+  },
+
+  profile: {
+    title: 'Mon profil',
+    statCreated_one: 'Événement créé',
+    statCreated_other: 'Événements créés',
+    statParticipated_one: 'Participation',
+    statParticipated_other: 'Participations',
+    myParticipationsSection: 'Mes participations',
+    emptyParticipations: "Vous n'avez encore participé à aucun événement.",
+    storageNotice: 'Vos informations sont enregistrées uniquement sur cet appareil. Elles ne sont envoyées nulle part.',
+    logoutButton: 'Se déconnecter',
+  },
+} as const;
+
+export type TranslationKeys = typeof fr;
