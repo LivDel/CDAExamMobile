@@ -1,0 +1,24 @@
+# Cahier des charges & Documents privés
+*cahier_des_charges*
+*.pdf
+
+# Règles & Fichiers de configuration Agents (privés, ne doivent pas aller sur GitHub)
+.agents/
+*AGENTS.md
+*rules.md
+RULES.md
+AVANCEMENT.md
+SUIVI.md
+
+# Expo & React Native (si lancé à la racine)
+.expo/
+dist/
+web-build/
+node_modules/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.DS_Store
+*.pem
+.env*.local
+*.tsbuildinfo
