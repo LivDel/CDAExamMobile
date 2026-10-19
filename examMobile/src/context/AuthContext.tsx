@@ -51,12 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       (acc) => acc.email.toLowerCase() === cleanEmail
     );
 
-    if (!matchedAccount) {
-      setIsLoading(false);
-      return { success: false, error: 'auth.errorInvalidCredentials' };
-    }
-
-    if (cleanPassword && matchedAccount.password && matchedAccount.password !== cleanPassword) {
+    if (!matchedAccount || matchedAccount.password !== cleanPassword) {
       setIsLoading(false);
       return { success: false, error: 'auth.errorInvalidCredentials' };
     }

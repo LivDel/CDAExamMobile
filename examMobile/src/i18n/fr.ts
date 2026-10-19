@@ -66,7 +66,7 @@ export const fr = {
     countEvents_other: '%{count} événements',
     statusUpcoming: 'À venir',
     statusParticipated: 'Participé',
-    newEventButton: '+ Nouvel événement',
+    newEventButton: 'Nouvel événement',
     emptyList: 'Aucun événement pour le moment',
     emptyFilter: 'Aucun événement dans cette catégorie',
     distanceFormatKm: 'à %{distance} km',

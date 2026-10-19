@@ -72,10 +72,22 @@ export const EventsListScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.headerTitle}>{t('events.myEventsTitle')}</Text>
         </View>
 
-        {/* Avatar initiales */}
-        <View style={styles.avatar}>
+        {/* Avatar initiales cliquable vers le profil */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            const parent = navigation.getParent();
+            if (parent) {
+              (parent as any).navigate('ProfileTab');
+            } else {
+              (navigation as any).navigate('ProfileTab');
+            }
+          }}
+          style={styles.avatar}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
           <Text style={styles.avatarText}>{userInitials}</Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* Barre de filtres (Tous, À venir, Participés) */}
