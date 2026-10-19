@@ -1,9 +1,15 @@
 {
-  "name": "exammobile",
+  "name": "eventease",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.ts",
   "dependencies": {
+    "@expo-google-fonts/nunito": "^0.4.2",
     "@expo/ui": "~58.0.20",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-navigation/bottom-tabs": "^7.21.0",
+    "@react-navigation/native": "^7.5.1",
+    "@react-navigation/native-stack": "^7.21.0",
     "expo": "~58.0.14",
     "expo-constants": "~58.0.12",
     "expo-device": "~58.0.5",
@@ -29,6 +35,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.3.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~58.0.4",
     "typescript": "~6.0.3"
   },
   "scripts": {

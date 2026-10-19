@@ -12,9 +12,13 @@
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "App.tsx",
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "example"
   ]
 }
