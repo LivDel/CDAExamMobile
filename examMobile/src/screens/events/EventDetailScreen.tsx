@@ -3,14 +3,13 @@
  * Zéro texte en dur, utilisation intégrale de i18n
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -21,6 +20,8 @@ import { theme } from '../../constants/theme';
 import { t } from '../../i18n';
 import { useEvents } from '../../context/EventsContext';
 import { confirmAction } from '../../utils/alert';
+import { fetchLiveWeather, LiveWeather } from '../../services/weather';
+import { getUserLocation, extractCoordinates, calculateDistanceKm } from '../../services/location';
 
 type Props = NativeStackScreenProps<EventsStackParamList, 'EventDetail'>;
 
@@ -29,6 +30,34 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { getEventById, deleteEvent, toggleParticipation } = useEvents();
 
   const event = getEventById(eventId);
+
+  // États pour les fonctionnalités bonus CDA : météo temps réel & distance dynamique
+  const [liveWeather, setLiveWeather] = useState<LiveWeather | null>(null);
+  const [dynamicDistance, setDynamicDistance] = useState<number | undefined>(event?.distanceKm);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (event?.location) {
+      // 1. Récupération de la météo en direct via API externe (Bonus CDA)
+      fetchLiveWeather(event.location).then((data) => {
+        if (isMounted && data) {
+          setLiveWeather(data);
+        }
+      });
+
+      // 2. Calcul dynamique de la distance par géolocalisation Haversine (Bonus CDA)
+      getUserLocation().then((userCoords) => {
+        if (isMounted) {
+          const eventCoords = extractCoordinates(event.location);
+          const dist = calculateDistanceKm(userCoords, eventCoords);
+          setDynamicDistance(dist);
+        }
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [event?.location]);
 
   if (!event) {
     return (
@@ -46,7 +75,7 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     );
   }
 
-  // Confirmation avant suppression (fonctionne sur Web et Mobile)
+  // Confirmation avant suppression avec alerte native Oui/Non
   const handleDelete = () => {
     confirmAction(
       t('events.deleteTitle'),
@@ -55,9 +84,28 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         await deleteEvent(event.id);
         navigation.goBack();
       },
-      t('common.delete'),
-      t('common.cancel')
+      t('common.yes'),
+      t('common.no'),
+      true
     );
+  };
+
+  // Gestion de l'inscription / désinscription avec confirmation native Oui/Non
+  const handleToggleParticipation = () => {
+    if (event.isParticipated) {
+      // Demande de confirmation native pour annuler l'inscription
+      confirmAction(
+        t('events.cancelParticipationTitle'),
+        t('events.cancelParticipationConfirm'),
+        () => toggleParticipation(event.id),
+        t('common.yes'),
+        t('common.no'),
+        false
+      );
+    } else {
+      // Inscription directe
+      toggleParticipation(event.id);
+    }
   };
 
   // Formatage de la date en français
@@ -78,6 +126,9 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     }
     return dateStr;
   };
+
+  const finalDistance = dynamicDistance ?? event.distanceKm;
+  const displayedWeather = liveWeather || event.weather;
 
   return (
     <ScreenContainer>
@@ -123,7 +174,7 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
             ]}
           >
             {event.isParticipated
-              ? t('events.statusParticipated')
+              ? `✓ ${t('events.statusRegistered')}`
               : t('events.upcomingInDays', { days: 5 })}
           </Text>
         </View>
@@ -143,7 +194,7 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* Carte : Lieu et distance */}
+        {/* Carte : Lieu et distance dynamique (Bonus CDA) */}
         <View style={[styles.detailCard, theme.shadows.card]}>
           <View style={styles.iconCircle}>
             <Ionicons name="location-outline" size={22} color={theme.colors.primary} />
@@ -151,28 +202,41 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <View style={styles.cardTextContent}>
             <Text style={styles.cardLabel}>{t('events.sectionLocation')}</Text>
             <Text style={styles.cardValue}>{event.location}</Text>
-            {event.distanceKm !== undefined ? (
+            {finalDistance !== undefined ? (
               <Text style={styles.cardSubValue}>
                 {t('events.distanceFromYou', {
-                  distance: `${event.distanceKm.toString().replace('.', ',')} km`,
+                  distance: `${finalDistance.toString().replace('.', ',')} km`,
                 })}
               </Text>
             ) : null}
           </View>
         </View>
 
-        {/* Carte : Météo prévue (Feature Bonus CDA) */}
-        {event.weather ? (
+        {/* Carte : Météo (Feature Bonus CDA avec API temps réel et fallback) */}
+        {displayedWeather ? (
           <View style={[styles.detailCard, theme.shadows.card]}>
             <View style={[styles.iconCircle, styles.weatherIconCircle]}>
-              <Ionicons name="sunny-outline" size={22} color={theme.colors.accent} />
+              <Ionicons
+                name={
+                  displayedWeather.condition.toLowerCase().includes('pluie') ||
+                  displayedWeather.condition.toLowerCase().includes('averse')
+                    ? 'rainy-outline'
+                    : displayedWeather.condition.toLowerCase().includes('nuage')
+                    ? 'partly-sunny-outline'
+                    : 'sunny-outline'
+                }
+                size={22}
+                color={theme.colors.accent}
+              />
             </View>
             <View style={styles.cardTextContent}>
               <Text style={styles.cardLabel}>{t('events.sectionWeather')}</Text>
               <Text style={styles.cardValue}>
-                {event.weather.condition} · {event.weather.temperature} °C
+                {displayedWeather.condition} · {displayedWeather.temperature} °C
               </Text>
-              <Text style={styles.cardSubValue}>{t('events.weatherForecastNote')}</Text>
+              <Text style={styles.cardSubValue}>
+                {liveWeather ? t('events.weatherLiveNote') : t('events.weatherForecastNote')}
+              </Text>
             </View>
           </View>
         ) : null}
@@ -184,16 +248,16 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Bouton d'action principal en bas : Participation */}
+      {/* Bouton d'action principal en bas : Participation / Inscription */}
       <View style={styles.bottomBar}>
         <AppButton
           title={
             event.isParticipated
-              ? `✓ ${t('events.actionCancelParticipation')}`
-              : `✓ ${t('events.actionMarkParticipated')}`
+              ? `✓ ${t('events.actionRegistered')}`
+              : t('events.actionWishParticipate')
           }
           variant={event.isParticipated ? 'secondary' : 'primary'}
-          onPress={() => toggleParticipation(event.id)}
+          onPress={handleToggleParticipation}
           style={event.isParticipated ? styles.buttonParticipated : undefined}
           textStyle={event.isParticipated ? styles.buttonParticipatedText : undefined}
         />

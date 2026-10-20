@@ -11,7 +11,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -51,8 +50,9 @@ export const ProfileScreen: React.FC = () => {
       async () => {
         await logout();
       },
-      t('profile.logoutButton'),
-      t('common.cancel')
+      t('common.yes'),
+      t('common.no'),
+      true
     );
   };
 

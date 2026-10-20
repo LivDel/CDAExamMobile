@@ -24,7 +24,7 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [events, setEvents] = useState<AppEvent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Chargement des événements stockés
+  // Rechargement manuel des événements
   const refreshEvents = async () => {
     setIsLoading(true);
     const data = await storageService.getEvents();
@@ -32,8 +32,18 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsLoading(false);
   };
 
+  // Chargement asynchrone des événements au montage
   useEffect(() => {
-    refreshEvents();
+    let isMounted = true;
+    storageService.getEvents().then((data) => {
+      if (isMounted) {
+        setEvents(data);
+        setIsLoading(false);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Ajouter un nouvel événement

@@ -9,8 +9,9 @@ export const confirmAction = (
   title: string,
   message: string,
   onConfirm: () => void | Promise<void>,
-  confirmText: string = 'Confirmer',
-  cancelText: string = 'Annuler'
+  confirmText: string = 'Oui',
+  cancelText: string = 'Non',
+  isDestructive: boolean = false
 ): void => {
   if (Platform.OS === 'web') {
     // Sur navigateur Web, Alert.alert de React Native Web ne s'affiche pas
@@ -19,11 +20,12 @@ export const confirmAction = (
       onConfirm();
     }
   } else {
+    // Alerte native iOS / Android
     Alert.alert(title, message, [
       { text: cancelText, style: 'cancel' },
       {
         text: confirmText,
-        style: 'destructive',
+        style: isDestructive ? 'destructive' : 'default',
         onPress: () => {
           onConfirm();
         },

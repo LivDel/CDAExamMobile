@@ -4,7 +4,7 @@
  * Zéro texte en dur, utilisation de i18n
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -24,6 +23,9 @@ import { AppButton } from '../../components/common/AppButton';
 import { theme } from '../../constants/theme';
 import { t } from '../../i18n';
 import { useEvents } from '../../context/EventsContext';
+import { confirmAction } from '../../utils/alert';
+import { extractCoordinates, calculateDistanceKm, DEFAULT_USER_LOCATION } from '../../services/location';
+import { fetchLiveWeather } from '../../services/weather';
 
 type Props = NativeStackScreenProps<EventsStackParamList, 'EventForm'>;
 
@@ -32,27 +34,16 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
   const isEditing = Boolean(eventId);
   const { getEventById, addEvent, updateEvent } = useEvents();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState('2026-10-30');
-  const [time, setTime] = useState('14h00');
-  const [location, setLocation] = useState('');
+  // En mode édition, initialisation directe avec l'événement existant (évite un re-render effect)
+  const existing = eventId ? getEventById(eventId) : undefined;
+
+  const [title, setTitle] = useState(existing?.title || '');
+  const [description, setDescription] = useState(existing?.description || '');
+  const [date, setDate] = useState(existing?.date || '2026-10-30');
+  const [time, setTime] = useState(existing?.time || '14h00');
+  const [location, setLocation] = useState(existing?.location || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  // Si on est en mode édition, pré-remplir les données
-  useEffect(() => {
-    if (eventId) {
-      const existing = getEventById(eventId);
-      if (existing) {
-        setTitle(existing.title);
-        setDescription(existing.description);
-        setDate(existing.date);
-        setTime(existing.time);
-        setLocation(existing.location);
-      }
-    }
-  }, [eventId, getEventById]);
 
   const handleSave = async () => {
     if (!title.trim() || !description.trim() || !date.trim() || !location.trim()) {
@@ -75,6 +66,11 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
     const finalDate = normalizeDate(date);
 
     try {
+      const loc = location.trim();
+      const coords = extractCoordinates(loc);
+      const computedDistance = calculateDistanceKm(DEFAULT_USER_LOCATION, coords);
+      const liveW = await fetchLiveWeather(loc);
+
       if (isEditing && eventId) {
         const existing = getEventById(eventId);
         if (existing) {
@@ -84,7 +80,9 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
             description: description.trim(),
             date: finalDate,
             time: time.trim() || '18h00',
-            location: location.trim(),
+            location: loc,
+            distanceKm: computedDistance,
+            weather: liveW || existing.weather,
           });
         }
       } else {
@@ -93,11 +91,11 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
           description: description.trim(),
           date: finalDate,
           time: time.trim() || '18h00',
-          location: location.trim(),
-          distanceKm: 2.5,
-          weather: {
+          location: loc,
+          distanceKm: computedDistance,
+          weather: liveW || {
             condition: 'Ensoleillé',
-            temperature: 18,
+            temperature: 20,
           },
         });
       }
@@ -109,12 +107,29 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
     }
   };
 
+  // Confirmation native Oui / Non en cas de modification en cours
+  const handleCancel = () => {
+    const hasChanges = title.trim().length > 0 || description.trim().length > 0 || location.trim().length > 0;
+    if (hasChanges) {
+      confirmAction(
+        t('form.discardChangesTitle'),
+        t('form.discardChangesConfirm'),
+        () => navigation.goBack(),
+        t('common.yes'),
+        t('common.no'),
+        true
+      );
+    } else {
+      navigation.goBack();
+    }
+  };
+
   return (
     <ScreenContainer>
       {/* Barre supérieure : Bouton fermer et Titre */}
       <View style={styles.topBar}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={handleCancel}
           style={styles.closeButton}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
@@ -216,7 +231,7 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
             />
 
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={handleCancel}
               style={styles.cancelLink}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
