@@ -21,13 +21,13 @@ import { t } from '../../i18n';
 import { useEvents } from '../../context/EventsContext';
 import { confirmAction } from '../../utils/alert';
 import { fetchLiveWeather, LiveWeather } from '../../services/weather';
-import { getUserLocation, extractCoordinates, calculateDistanceKm } from '../../services/location';
+import { getDistanceToLocation } from '../../services/location';
 
 type Props = NativeStackScreenProps<EventsStackParamList, 'EventDetail'>;
 
 export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { eventId } = route.params;
-  const { getEventById, deleteEvent, toggleParticipation } = useEvents();
+  const { getEventById, deleteEvent, toggleParticipation, userLocation } = useEvents();
 
   const event = getEventById(eventId);
 
@@ -35,21 +35,21 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const [liveWeather, setLiveWeather] = useState<LiveWeather | null>(null);
   const [dynamicDistance, setDynamicDistance] = useState<number | undefined>(event?.distanceKm);
 
+  const eventLocation = event?.location;
+
   useEffect(() => {
     let isMounted = true;
-    if (event?.location) {
+    if (eventLocation) {
       // 1. Récupération de la météo en direct via API externe (Bonus CDA)
-      fetchLiveWeather(event.location).then((data) => {
+      fetchLiveWeather(eventLocation).then((data) => {
         if (isMounted && data) {
           setLiveWeather(data);
         }
       });
 
-      // 2. Calcul dynamique de la distance par géolocalisation Haversine (Bonus CDA)
-      getUserLocation().then((userCoords) => {
-        if (isMounted) {
-          const eventCoords = extractCoordinates(event.location);
-          const dist = calculateDistanceKm(userCoords, eventCoords);
+      // 2. Calcul dynamique réel de la distance (Bonus CDA)
+      getDistanceToLocation(eventLocation, userLocation).then((dist) => {
+        if (isMounted && dist !== null) {
           setDynamicDistance(dist);
         }
       });
@@ -57,7 +57,7 @@ export const EventDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     return () => {
       isMounted = false;
     };
-  }, [event?.location]);
+  }, [eventLocation, userLocation]);
 
   if (!event) {
     return (

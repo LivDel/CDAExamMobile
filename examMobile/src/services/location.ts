@@ -1,32 +1,20 @@
 /**
  * Service de Géolocalisation et calcul de distance (Fonctionnalité Bonus du Cahier des Charges CDA)
- * Calcule la distance réelle entre la position de l'utilisateur et le lieu de l'événement
- * via la formule de Haversine (distance géodésique).
+ * Utilise expo-location pour demander la permission native au système et récupérer le GPS réel.
+ * Géocode le lieu de l'événement et calcule la distance exacte via la formule de Haversine.
  */
+
+import * as Location from 'expo-location';
 
 export interface Coordinates {
   latitude: number;
   longitude: number;
 }
 
-// Coordonnées de référence pour les villes récurrentes de l'application
-const CITY_COORDINATES: Record<string, Coordinates> = {
-  bordeaux: { latitude: 44.8378, longitude: -0.5792 },
-  paris: { latitude: 48.8566, longitude: 2.3522 },
-  lyon: { latitude: 45.764, longitude: 4.8357 },
-  marseille: { latitude: 43.2965, longitude: 5.3698 },
-  toulouse: { latitude: 43.6047, longitude: 1.4442 },
-  nantes: { latitude: 47.2184, longitude: -1.5536 },
-  lille: { latitude: 50.6292, longitude: 3.0573 },
-  strasbourg: { latitude: 48.5734, longitude: 7.7521 },
-  montpellier: { latitude: 43.6108, longitude: 3.8767 },
-  rennes: { latitude: 48.1173, longitude: -1.6778 },
-};
-
-// Position par défaut de l'utilisateur pour la démonstration (Bordeaux Centre)
+// Coordonnées de référence par défaut (Lille / Wasquehal) si le GPS est désactivé
 export const DEFAULT_USER_LOCATION: Coordinates = {
-  latitude: 44.8378,
-  longitude: -0.5792,
+  latitude: 50.6694,
+  longitude: 3.1306,
 };
 
 /**
@@ -58,50 +46,180 @@ export function calculateDistanceKm(
   return Math.round(distance * 10) / 10;
 }
 
+// Cache mémoire des coordonnées géocodées pour optimiser les performances
+const coordsCache = new Map<string, Coordinates>();
+
 /**
- * Tente de trouver les coordonnées GPS d'une adresse ou d'un nom de lieu
+ * Demande l'autorisation GPS native (popup système iOS / Android)
+ * et renvoie les coordonnées réelles de l'appareil
  */
-export function extractCoordinates(location: string): Coordinates {
-  if (!location) {
-    return DEFAULT_USER_LOCATION;
-  }
-
-  const normalized = location.toLowerCase();
-
-  for (const [city, coords] of Object.entries(CITY_COORDINATES)) {
-    if (normalized.includes(city)) {
-      return coords;
+export async function getUserLocation(): Promise<Coordinates | null> {
+  try {
+    // 1. Demande d'autorisation via la popup native du système
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      // Permission refusée par l'utilisateur
+      return null;
     }
-  }
 
-  // Si lieu précis non référencé, décalage léger pour simuler un quartier proche
-  return {
-    latitude: DEFAULT_USER_LOCATION.latitude + 0.015,
-    longitude: DEFAULT_USER_LOCATION.longitude + 0.02,
-  };
+    // 2. Lecture rapide de la dernière position connue pour réactivité maximale
+    const lastPosition = await Location.getLastKnownPositionAsync();
+    if (lastPosition?.coords) {
+      return {
+        latitude: lastPosition.coords.latitude,
+        longitude: lastPosition.coords.longitude,
+      };
+    }
+
+    // 3. Lecture de la position GPS actuelle si aucune position en cache
+    const position = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Balanced,
+    });
+
+    return {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+  } catch (error) {
+    // En cas d'erreur ou d'exécution sur simulateur sans GPS
+    console.warn('Erreur récupération GPS:', error);
+    return null;
+  }
 }
 
 /**
- * Récupère la position géographique de l'utilisateur (GPS natif ou navigateur)
+ * Géocode un nom de ville ou une adresse pour obtenir ses coordonnées GPS réelles
+ * Utilise d'abord le géocodeur natif de l'appareil, puis l'API publique Open-Meteo avec recherche intelligente
  */
-export function getUserLocation(): Promise<Coordinates> {
-  return new Promise((resolve) => {
-    if (typeof navigator !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        () => {
-          // Si permission refusée ou indisponible, fallback position par défaut
-          resolve(DEFAULT_USER_LOCATION);
-        },
-        { timeout: 5000, enableHighAccuracy: false }
-      );
-    } else {
-      resolve(DEFAULT_USER_LOCATION);
+export async function extractCoordinates(location: string): Promise<Coordinates | null> {
+  if (!location || location.trim().length === 0) {
+    return null;
+  }
+
+  const query = location.trim();
+  const cacheKey = query.toLowerCase();
+
+  if (coordsCache.has(cacheKey)) {
+    return coordsCache.get(cacheKey)!;
+  }
+
+  // 1. Géocodage natif de la plateforme (Apple Maps / Google Play Services)
+  try {
+    const results = await Location.geocodeAsync(query);
+    if (results && results.length > 0) {
+      const coords = {
+        latitude: results[0].latitude,
+        longitude: results[0].longitude,
+      };
+      coordsCache.set(cacheKey, coords);
+      return coords;
     }
-  });
+  } catch {
+    // Poursuite avec le fallback API
+  }
+
+  // 2. Géocodage en ligne via l'API Open-Meteo Geocoding avec résolution intelligente
+  try {
+    const searchOpenMeteo = async (term: string): Promise<Coordinates | null> => {
+      const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+        term
+      )}&count=1&language=fr&format=json`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          return {
+            latitude: data.results[0].latitude,
+            longitude: data.results[0].longitude,
+          };
+        }
+      }
+      return null;
+    };
+
+    // A. Recherche sur la chaîne complète (ex: "Courrières")
+    let coords = await searchOpenMeteo(query);
+    if (coords) {
+      coordsCache.set(cacheKey, coords);
+      return coords;
+    }
+
+    // B. Recherche par segments (ex: "Salle des fêtes, 62710 Courrières")
+    const segments = query.split(',').map((s) => s.trim()).filter(Boolean);
+    for (let i = segments.length - 1; i >= 0; i--) {
+      coords = await searchOpenMeteo(segments[i]);
+      if (coords) {
+        coordsCache.set(cacheKey, coords);
+        return coords;
+      }
+    }
+
+    // C. Recherche par code postal français (5 chiffres consécutifs)
+    const postalMatch = query.match(/\b\d{5}\b/);
+    if (postalMatch) {
+      coords = await searchOpenMeteo(postalMatch[0]);
+      if (coords) {
+        coordsCache.set(cacheKey, coords);
+        return coords;
+      }
+    }
+
+    // D. Recherche par mots-clés significatifs (ex: "Gare de Fontainebleau-Avon" -> "Fontainebleau")
+    const ignoredWords = new Set([
+      'gare',
+      'salle',
+      'place',
+      'maison',
+      'centre',
+      'parc',
+      'rue',
+      'avenue',
+      'boulevard',
+      'polyvalente',
+      'associations',
+      'village',
+      'quartier',
+    ]);
+    const words = query
+      .split(/[\s,-]+/)
+      .map((w) => w.trim())
+      .filter((w) => w.length > 3 && !ignoredWords.has(w.toLowerCase()));
+
+    for (const w of words) {
+      coords = await searchOpenMeteo(w);
+      if (coords) {
+        coordsCache.set(cacheKey, coords);
+        return coords;
+      }
+    }
+  } catch {
+    // Échec de la requête réseau
+  }
+
+  return null;
+}
+
+/**
+ * Calcule dynamiquement la distance entre la position de l'utilisateur et le lieu de l'événement
+ * Déclenche la demande d'autorisation native si nécessaire
+ */
+export async function getDistanceToLocation(
+  eventLocation: string,
+  userCoords?: Coordinates | null
+): Promise<number | null> {
+  if (!eventLocation || eventLocation.trim().length === 0) {
+    return null;
+  }
+
+  // 1. Récupération des coordonnées de l'utilisateur (GPS réel ou fallback par défaut)
+  const coordsUser = userCoords ?? (await getUserLocation()) ?? DEFAULT_USER_LOCATION;
+
+  // 2. Géocodage du lieu de l'événement (ex. "Courrières" -> 50.4578, 2.9472)
+  const coordsEvent = await extractCoordinates(eventLocation);
+  if (!coordsEvent) {
+    return null;
+  }
+
+  // 3. Calcul de la distance géodésique Haversine
+  return calculateDistanceKm(coordsUser, coordsEvent);
 }

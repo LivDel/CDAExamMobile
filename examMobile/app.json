@@ -8,7 +8,10 @@
     "scheme": "eventease",
     "userInterfaceStyle": "light",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "EventEase utilise votre position pour calculer la distance qui vous sépare des événements."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -17,6 +20,7 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -29,6 +33,12 @@
           "backgroundColor": "#FFF8F0",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 120
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "EventEase utilise votre position pour calculer la distance qui vous sépare des événements."
         }
       ]
     ]

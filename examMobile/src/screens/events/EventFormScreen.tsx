@@ -24,7 +24,7 @@ import { theme } from '../../constants/theme';
 import { t } from '../../i18n';
 import { useEvents } from '../../context/EventsContext';
 import { confirmAction } from '../../utils/alert';
-import { extractCoordinates, calculateDistanceKm, DEFAULT_USER_LOCATION } from '../../services/location';
+import { getDistanceToLocation } from '../../services/location';
 import { fetchLiveWeather } from '../../services/weather';
 
 type Props = NativeStackScreenProps<EventsStackParamList, 'EventForm'>;
@@ -32,7 +32,7 @@ type Props = NativeStackScreenProps<EventsStackParamList, 'EventForm'>;
 export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
   const eventId = route.params?.eventId;
   const isEditing = Boolean(eventId);
-  const { getEventById, addEvent, updateEvent } = useEvents();
+  const { getEventById, addEvent, updateEvent, userLocation } = useEvents();
 
   // En mode édition, initialisation directe avec l'événement existant (évite un re-render effect)
   const existing = eventId ? getEventById(eventId) : undefined;
@@ -67,8 +67,8 @@ export const EventFormScreen: React.FC<Props> = ({ route, navigation }) => {
 
     try {
       const loc = location.trim();
-      const coords = extractCoordinates(loc);
-      const computedDistance = calculateDistanceKm(DEFAULT_USER_LOCATION, coords);
+      const computedDistance =
+        (await getDistanceToLocation(loc, userLocation)) ?? existing?.distanceKm;
       const liveW = await fetchLiveWeather(loc);
 
       if (isEditing && eventId) {
