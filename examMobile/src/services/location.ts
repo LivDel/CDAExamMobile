@@ -11,7 +11,7 @@ export interface Coordinates {
   longitude: number;
 }
 
-// Coordonnées de référence par défaut (Lille / Wasquehal) si le GPS est désactivé
+// Coordonnées de référence par défaut si le GPS est désactivé
 export const DEFAULT_USER_LOCATION: Coordinates = {
   latitude: 50.6694,
   longitude: 3.1306,
