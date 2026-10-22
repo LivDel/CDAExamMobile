@@ -1,56 +1,121 @@
-# Welcome to your Expo app 👋
+# EventEase — Application Mobile React Native / Expo 📅
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2057-blue.svg?style=flat-square&logo=expo)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.86-61dafb.svg?style=flat-square&logo=react)](https://reactnative.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9%20Strict-3178c6.svg?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![React Navigation](https://img.shields.io/badge/React%20Navigation-v7-6b52ae.svg?style=flat-square)](https://reactnavigation.org)
+[![Code Quality](https://img.shields.io/badge/ESLint-0%20Error-success.svg?style=flat-square&logo=eslint)](https://eslint.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-## Get started
+Ce dossier contient le code source complet de l'application mobile **EventEase**, développée avec **React Native**, **Expo SDK 57**, et entièrement typée en **TypeScript**.
 
-1. Install dependencies
+Pour une documentation globale du projet et les slides de soutenance, consultez le [README racine](../README.md).
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## 📑 Sommaire
 
-   ```bash
-   npx expo start
-   ```
+- [Aperçu de l'Application](#-aperçu-de-lapplication)
+- [Architecture & Choix Techniques](#-architecture--choix-techniques)
+- [Structure du Code Source](#-structure-du-code-source)
+- [Installation & Démarrage](#-installation--démarrage)
+- [Comptes de Démonstration](#-comptes-de-démonstration)
+- [Commandes Utiles](#-commandes-utiles)
+- [Contrôle Qualité](#-contrôle-qualité)
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## ✨ Aperçu de l'Application
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- 🔐 **Authentification locale** avec persistance de session (`AsyncStorage`).
+- 📋 **Catalogue des événements** avec filtres dynamiques (*Tous*, *À venir*, *Inscrits*) et pull-to-refresh.
+- ➕ **CRUD complet** (Création, Consultation détaillée, Modification, Suppression).
+- 🤝 **Inscription / Désinscription** avec confirmations natives de sécurité Oui / Non.
+- 🗓️ **Calendrier interactif sur-mesure** (matrice mensuelle dynamique, pastilles d'événements, sélection du jour).
+- ⛅ **Météo en temps réel** via l'API publique Open-Meteo avec conversion des codes WMO en français.
+- 📍 **Géolocalisation GPS native & Calcul de distance** par la formule géodésique universelle de Haversine.
+- 🎨 **Charte graphique respectée** : Crème `#FFF8F0`, Terracotta `#C2410C`, Sauge `#3F7D58`, police Nunito et cibles tactiles $\ge 44$ px.
+- 🌐 **Internationalisation (i18n)** : 100 % des textes centralisés dans `src/i18n/`, zéro chaîne en dur.
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🏛️ Architecture & Choix Techniques
 
-```bash
-npm run reset-project
+1. **Approche KISS (Keep It Simple, Stupid)** : Privilégie les React Hooks natifs et le `Context API` (`AuthContext`, `EventsContext`), sans complexité superflue.
+2. **Navigation Découplée (React Navigation v7)** :
+   - `RootNavigator` : aiguillage conditionnel selon la présence de l'utilisateur.
+   - `AuthNavigator` : pile d'authentification (`LoginScreen`, `RegisterScreen`).
+   - `TabNavigator` : barre d'onglets inférieure (`Événements`, `Calendrier`, `Profil`).
+   - `EventsStackNavigator` : pile imbriquée pour le flux des événements (`Liste`, `Détail`, `Formulaire modal`).
+3. **Persistance Asynchrone** : Stockage local avec `@react-native-async-storage/async-storage` et pré-remplissage (*seed*) des 4 événements de la maquette.
+4. **Mini-document technique** : Consultez [ARCHITECTURE.md](ARCHITECTURE.md) pour la synthèse technique officielle.
+
+---
+
+## 📁 Structure du Code Source
+
+```text
+src/
+├── components/          # Composants UI modulaires
+│   ├── common/          # Boutons, champs de saisie, conteneur sécurisé
+│   └── events/          # Cartes d'événements (EventCard)
+├── constants/           # Design System (colors, theme, spacing, radii, typography)
+├── context/             # Contextes React (AuthContext, EventsContext)
+├── data/                # Données initiales de démonstration (initialEvents.ts)
+├── i18n/                # Système d'internationalisation et dictionnaire français
+├── navigation/          # Navigateurs React Navigation
+├── screens/             # Vues de l'application (auth, events, calendar, profile)
+├── services/            # Services externes (location, storage, weather)
+├── types/               # Définitions TypeScript (event, navigation, user)
+└── utils/               # Fonctions utilitaires (alert.ts pour confirmations natives)
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+---
 
-### Other setup steps
+## 🚀 Installation & Démarrage
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### 1. Installation des dépendances
+```bash
+npm install
+```
 
-## Learn more
+### 2. Démarrer le serveur Expo
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Exécution
+- **Sur smartphone physique** : Scannez le QR Code avec **Expo Go** (Android) ou l'application **Appareil photo** (iOS).
+- **Sur navigateur Web** : Tapez `w` dans le terminal.
+- **Sur émulateur Android** : Tapez `a` dans le terminal.
+- **Sur simulateur iOS** : Tapez `i` dans le terminal.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 👥 Comptes de Démonstration
 
-Join our community of developers creating universal apps.
+Des comptes avec mot de passe `password123` sont déjà enregistrés en local :
+- **Livio Delenclos** : `livio.delenclos@test.fr`
+- **Camille Martin** : `camille.martin@exemple.fr`
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 🛠️ Commandes Utiles
+
+```bash
+npm run start       # Démarre Metro Bundler Expo
+npm run android     # Lance sur émulateur Android
+npm run ios         # Lance sur simulateur iOS
+npm run web         # Lance sur le navigateur Web
+npm run lint        # Exécute l'analyse statique ESLint
+npx tsc --noEmit    # Vérifie le typage strict TypeScript
+```
+
+---
+
+## 🎯 Contrôle Qualité
+
+- TypeScript : **0 erreur** (`npx tsc --noEmit`)
+- ESLint : **0 erreur, 0 avertissement** (`npm run lint`)
+- Commentaires : **100 % en français**
+- Accessibilité : Cibles tactiles $\ge 44 \times 44$ px
