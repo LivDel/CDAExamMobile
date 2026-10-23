@@ -3,620 +3,422 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soutenance Projet Mobile CDA — EventEase (Livio DELENCLOS)</title>
+  <title>EventEase — Soutenance Projet Mobile CDA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Ambiance lumineuse d'arrière-plan -->
-  <div class="bg-ambient">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
+  <!-- Barre de progression supérieure -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <div class="app-container">
+  <!-- Conteneur principal du diaporama -->
+  <div class="deck-container">
 
-    <!-- En-tête supérieur & Barre d'outils de soutenance -->
-    <header class="top-bar">
-      <div class="brand-section">
-        <div class="brand-logo">
-          <div class="logo-icon">E</div>
-          <span class="brand-title">EventEase</span>
+    <!-- ===================================================================
+         SLIDE 1 : Titre & Introduction (1 min)
+         =================================================================== -->
+    <section class="slide active" id="slide-1" data-slide="1">
+      <div class="slide-content cover-slide">
+        <div class="badge-pill">
+          <span class="badge-dot"></span> Titre Pro CDA • Épreuve Pratique Mobile
         </div>
-        <span class="brand-tag">TITRE CDA • PROJET MOBILE</span>
-      </div>
+        
+        <h1 class="hero-title">
+          <span class="brand-gradient">EventEase</span>
+        </h1>
+        <p class="hero-subtitle">Application mobile de gestion d'événements associatifs</p>
 
-      <!-- Chronomètre interactif 10 minutes (Passage officiel 11h05 - 11h15) -->
-      <div class="timer-widget">
-        <div class="timer-slot-info">
-          <span>Passage :</span>
-          <span class="time">11h05 - 11h15</span>
-          <span>(10 min)</span>
-        </div>
-        <div class="timer-display" id="timerDisplay">10:00</div>
-        <div class="timer-controls">
-          <button class="btn-icon-tiny" id="timerToggleBtn" title="Démarrer / Pause (T)">▶</button>
-          <button class="btn-icon-tiny" id="timerResetBtn" title="Réinitialiser">↺</button>
-        </div>
-        <button class="demo-timer-btn" id="demoTimerBtn" title="Lancer le chrono dédié à la démo">⚡ Démo (4m30)</button>
-      </div>
-
-      <!-- Outils présentateur -->
-      <div class="top-tools">
-        <a href="jury.html" class="btn-tool" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #34d399; text-decoration: none;" title="Ouvrir la présentation épurée pour l'écran projeté du jury" target="_blank">
-          <span>👁️</span> Vue Jury (Écran Projeté)
-        </a>
-        <button class="btn-tool" id="toggleNotesBtn" title="Afficher les notes orateur (Touche P)">
-          <span>🎙️</span> Notes [P]
-        </button>
-        <button class="btn-tool" id="toggleOverviewBtn" title="Afficher tous les slides (Touche M)">
-          <span>📑</span> Sommaire [M]
-        </button>
-        <button class="btn-tool" id="fullscreenBtn" title="Mode plein écran (Touche F)">
-          <span>⛶</span> Plein Écran [F]
-        </button>
-      </div>
-    </header>
-
-    <!-- Zone principale d'affichage des slides -->
-    <main class="presentation-viewport">
-
-      <!-- ===================================================================
-           SLIDE 1 : Titre & Introduction (0:00 - 1:00)
-           =================================================================== -->
-      <section class="slide active" id="slide-1">
-        <div class="cover-layout">
-          <div class="cover-left">
-            <div class="cover-badge-top">
-              <span>🎯</span> SOUTENANCE OFFICIELLE DU PROJET
-            </div>
-            <h1 class="cover-title">EventEase</h1>
-            <p class="cover-subtitle">Application Mobile React Native pour la gestion d'événements associatifs</p>
-            
-            <div class="cover-info-box">
-              <div class="info-item">
-                <span class="info-label">Candidat</span>
-                <span class="info-val">DELENCLOS Livio</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Épreuve</span>
-                <span class="info-val">Titre Pro CDA (Bac+3/4)</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Créneau officiel</span>
-                <span class="info-val">11h05 - 11h15 (10 min)</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Stack</span>
-                <span class="info-val">React Native • Expo • TS</span>
-              </div>
+        <div class="hero-grid">
+          <div class="hero-card">
+            <span class="card-icon">👤</span>
+            <div class="card-info">
+              <span class="card-label">Candidat</span>
+              <span class="card-value">DELENCLOS Livio</span>
             </div>
           </div>
-
-          <div class="cover-right">
-            <div class="stat-pill-card">
-              <div>
-                <div class="stat-num">100%</div>
-                <div class="stat-desc">Fonctionnalités du CDC livrées</div>
-              </div>
-              <span style="font-size: 24px;">📱</span>
+          <div class="hero-card">
+            <span class="card-icon">⏱️</span>
+            <div class="card-info">
+              <span class="card-label">Format Soutenance</span>
+              <span class="card-value">10 minutes (démo incluse)</span>
             </div>
-            <div class="stat-pill-card">
-              <div>
-                <div class="stat-num">0</div>
-                <div class="stat-desc">Erreur & Warning (TS / ESLint)</div>
-              </div>
-              <span style="font-size: 24px;">✨</span>
-            </div>
-            <div class="stat-pill-card">
-              <div>
-                <div class="stat-num">4</div>
-                <div class="stat-desc">Fonctionnalités bonus intégrées</div>
-              </div>
-              <span style="font-size: 24px;">🚀</span>
-            </div>
-            <div class="stat-pill-card" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);">
-              <div>
-                <div class="stat-num" style="color: #34d399;">4 Jours</div>
-                <div class="stat-desc">Prototype complet & persistant</div>
-              </div>
-              <span style="font-size: 24px;">🏆</span>
+          </div>
+          <div class="hero-card">
+            <span class="card-icon">⚡</span>
+            <div class="card-info">
+              <span class="card-label">Stack Technique</span>
+              <span class="card-value">React Native • Expo • TypeScript</span>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- ===================================================================
-           SLIDE 2 : Cahier des Charges & Périmètre (1:00 - 2:00)
-           =================================================================== -->
-      <section class="slide" id="slide-2">
+        <div class="tech-tags">
+          <span class="tag">React Native 0.86</span>
+          <span class="tag">Expo SDK 57</span>
+          <span class="tag">TypeScript Strict</span>
+          <span class="tag">React Navigation v7</span>
+          <span class="tag">AsyncStorage</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SLIDE 2 : Contexte & Objectifs (1 min)
+         =================================================================== -->
+    <section class="slide" id="slide-2" data-slide="2">
+      <div class="slide-content">
         <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category">Cahier des Charges & Périmètre</span>
-            <h2 class="slide-title">Contexte Associatif & Objectifs du Projet</h2>
-          </div>
-          <span class="slide-time-tag">⏱️ 1:00 - 2:00 (1 min)</span>
+          <span class="slide-category">01 • Contexte & Défi</span>
+          <h2 class="slide-title">Le Projet EventEase</h2>
+          <p class="slide-description">Un prototype fonctionnel conçu et développé en 4 jours pour une association.</p>
         </div>
 
-        <div class="slide-body">
-          <div class="grid-2">
-            <!-- Colonne 1 : Contexte et Attentes du CDC -->
-            <div class="glass-card card-highlight">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-orange">🎯</div>
-                <h3 class="card-title">Le Défi : Prototype en 4 Jours</h3>
-              </div>
-              <p class="card-text" style="margin-bottom: 14px;">
-                L'association <strong>EventEase</strong> organise conférences, ateliers et sorties. Elle souhaitait une application permettant aux membres de consulter, créer et s'inscrire aux événements.
-              </p>
-              <ul class="feature-list">
-                <li><span class="badge-bullet">✓</span> <strong>Jour 1 :</strong> Socle technique, Charte & React Navigation</li>
-                <li><span class="badge-bullet">✓</span> <strong>Jour 2 :</strong> CRUD complet des événements & AsyncStorage</li>
-                <li><span class="badge-bullet">✓</span> <strong>Jour 3 :</strong> Calendrier, API météo en direct, Géolocalisation GPS</li>
-                <li><span class="badge-bullet">✓</span> <strong>Jour 4 :</strong> Tests finaux, ESLint zéro défaut, Soutenance</li>
-              </ul>
-            </div>
+        <div class="grid-3">
+          <div class="feature-box">
+            <div class="box-icon">🤝</div>
+            <h3>Le Besoin Associatif</h3>
+            <p>Permettre aux adhérents et bénévoles de découvrir les ateliers, sorties et conférences, de s'y inscrire et d'organiser leurs propres événements.</p>
+            <ul class="clean-list">
+              <li>Catalogue centralisé</li>
+              <li>Participation en un clic</li>
+              <li>Prise en main instantanée</li>
+            </ul>
+          </div>
 
-            <!-- Colonne 2 : Matrice des Fonctionnalités et Livrables -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-green">📊</div>
-                <h3 class="card-title">Matrice des Fonctionnalités & Livrables</h3>
-              </div>
-              <table class="grading-table">
-                <thead>
-                  <tr>
-                    <th>Fonctionnalité / Livrable</th>
-                    <th>Type</th>
-                    <th>Statut Réalisé</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Fonctionnalités de base</strong> (Auth, Liste, CRUD, Inscription)</td>
-                    <td><span class="badge-score score-perfect">Obligatoire</span></td>
-                    <td>✅ 100% conforme</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Qualité du code</strong> (Organisation, clarté, TS, 0 texte en dur)</td>
-                    <td><span class="badge-score score-perfect">Qualité</span></td>
-                    <td>✅ 0 erreur / 0 warning</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Persistance locale</strong> (AsyncStorage, seed démo)</td>
-                    <td><span class="badge-score score-perfect">Persistance</span></td>
-                    <td>✅ Persistant hors-ligne</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Fonctionnalités bonus</strong> (Calendrier, Météo API, GPS/Distance)</td>
-                    <td><span class="badge-score score-perfect">Bonus</span></td>
-                    <td>✅ 4 bonus intégrés</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Soutenance orale</strong> (10 min chrono, mini-doc technique 10 lignes)</td>
-                    <td><span class="badge-score score-perfect">Livrable</span></td>
-                    <td>✅ Maîtrisé</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="feature-box highlight-box">
+            <div class="box-icon">⏱️</div>
+            <h3>Défi : 4 Jours</h3>
+            <p>Un cycle de développement agile, structuré et respecté jour par jour :</p>
+            <div class="timeline-compact">
+              <div class="time-step"><strong>J1</strong> Initialisation & Navigation</div>
+              <div class="time-step"><strong>J2</strong> CRUD complet des événements</div>
+              <div class="time-step"><strong>J3</strong> Bonus (Météo, GPS, Calendrier)</div>
+              <div class="time-step"><strong>J4</strong> Finitions, tests & soutenance</div>
             </div>
+          </div>
+
+          <div class="feature-box">
+            <div class="box-icon">🎯</div>
+            <h3>Contraintes Clés</h3>
+            <p>Garantir une expérience mobile native sans dépendance à un serveur externe obligatoire :</p>
+            <ul class="clean-list">
+              <li>Persistance locale (AsyncStorage)</li>
+              <li>Navigation fluide et découplée</li>
+              <li>Code clair, typé et maintenable</li>
+            </ul>
           </div>
         </div>
-      </section>
-
-      <!-- ===================================================================
-           SLIDE 3 : Architecture Technique & Mini-Doc (2:00 - 3:00)
-           =================================================================== -->
-      <section class="slide" id="slide-3">
-        <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category">Livrable Technique Obligatoire</span>
-            <h2 class="slide-title">Architecture & Choix Techniques (Le Mini-Doc 10 Lignes)</h2>
-          </div>
-          <span class="slide-time-tag">⏱️ 2:00 - 3:00 (1 min)</span>
-        </div>
-
-        <div class="slide-body">
-          <div class="grid-3">
-            <!-- Pilier 1 : Navigation & État -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-blue">🧭</div>
-                <h3 class="card-title">1. Navigation & État Découplés</h3>
-              </div>
-              <ul class="feature-list">
-                <li><span class="badge-bullet">▪</span> <strong>React Navigation v7 :</strong> <code>RootNavigator</code> conditionnel avec <code>AuthNavigator</code> et <code>TabNavigator</code> (3 onglets).</li>
-                <li><span class="badge-bullet">▪</span> <strong>Navigation Imbriquée :</strong> <code>EventsStackNavigator</code> pour le flux Liste ➔ Détail ➔ Formulaire.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Context API (KISS) :</strong> <code>AuthContext</code> (session) & <code>EventsContext</code> (cycle de vie des données) sans sur-ingénierie Redux.</li>
-              </ul>
-            </div>
-
-            <!-- Pilier 2 : Design System & i18n -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-orange">🎨</div>
-                <h3 class="card-title">2. Design System & 100% i18n</h3>
-              </div>
-              <ul class="feature-list">
-                <li><span class="badge-bullet">▪</span> <strong>Charte Maquette :</strong> Fond Crème (<code>#FFF8F0</code>), Terracotta (<code>#C2410C</code>), Sauge (<code>#3F7D58</code>) et Ambre.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Zéro Valeur Magique :</strong> Toutes les couleurs, espacements et rayons sont centralisés dans <code>theme.ts</code>.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Zéro Texte en Dur :</strong> 100% des chaînes sont dans <code>src/i18n/fr.ts</code> (traduction et maintenance immédiate).</li>
-              </ul>
-            </div>
-
-            <!-- Pilier 3 : Persistance & Alertes -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-green">🛡️</div>
-                <h3 class="card-title">3. Persistance & Règle 11</h3>
-              </div>
-              <ul class="feature-list">
-                <li><span class="badge-bullet">▪</span> <strong>AsyncStorage Robuste :</strong> Sauvegarde asynchrone des événements et comptes utilisateurs avec seed initial.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Règle 11 des Alertes Natives :</strong> Utilisation exclusive d'<code>Alert.alert</code> avec boutons Oui/Non pour les actions critiques.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Performance :</strong> Cache mémoire GPS et géocodage instantané pour un démarrage sans freeze.</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Encadré synthèse du mini-document -->
-          <div class="glass-card card-highlight" style="padding: 14px 20px;">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 13px; font-weight: 700; color: #fb923c;">📄 Document officiel <code>examMobile/ARCHITECTURE.md</code> validé (10 lignes synthétiques)</span>
-              <span style="font-size: 12px; color: var(--color-sage); font-weight: 600;">✓ Prêt pour l'archivage jury</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================================
-           SLIDE 4 : LIVE DÉMO (4 min 30 - Cœur de la présentation)
-           =================================================================== -->
-      <section class="slide" id="slide-4">
-        <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category" style="color: #34d399;">Temps Fort de la Soutenance</span>
-            <h2 class="slide-title">Plan de la Live Démo sur Mobile (4 min 30)</h2>
-          </div>
-          <span class="slide-time-tag" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.4);">
-            ⏱️ 3:00 - 7:30 (4 min 30)
-          </span>
-        </div>
-
-        <div class="slide-body">
-          <div class="timeline-demo">
-
-            <!-- Étape 1 -->
-            <div class="timeline-step">
-              <span class="step-time">0:00 - 0:45</span>
-              <div class="step-content">
-                <div class="step-title">1. Démarrage, Permission GPS Native & Inscription / Connexion</div>
-                <div class="step-desc">Lancement de l'application : popup native de géolocalisation demandée dès l'ouverture. Création d'un compte avec validation des mots de passe.</div>
-              </div>
-              <span class="step-badge">AuthStack</span>
-            </div>
-
-            <!-- Étape 2 -->
-            <div class="timeline-step">
-              <span class="step-time">0:45 - 1:30</span>
-              <div class="step-content">
-                <div class="step-title">2. Liste d'Accueil, Filtres & Kilométrage Réel Instantané</div>
-                <div class="step-desc">Accueil avec avatar personnalisé, filtres (Tous / À venir / Inscrits), compteur dynamique et calcul de distance exact (ex. Courrières : 26,9 km).</div>
-              </div>
-              <span class="step-badge">Liste Événements</span>
-            </div>
-
-            <!-- Étape 3 -->
-            <div class="timeline-step">
-              <span class="step-time">1:30 - 2:30</span>
-              <div class="step-content">
-                <div class="step-title">3. Création & Modification (CRUD) avec Confirmation d'Abandon</div>
-                <div class="step-desc">Ajout d'un événement, géocodage automatique de la commune, alerte native de confirmation Oui/Non en cas d'abandon de saisie.</div>
-              </div>
-              <span class="step-badge">Formulaire</span>
-            </div>
-
-            <!-- Étape 4 -->
-            <div class="timeline-step">
-              <span class="step-time">2:30 - 3:15</span>
-              <div class="step-content">
-                <div class="step-title">4. Détail : Météo API Live & Inscription « Je souhaite participer »</div>
-                <div class="step-desc">Récupération météo en direct via Open-Meteo. Clic sur « Je souhaite participer » ➔ bascule en « ✓ Inscrit » avec confirmation native pour annuler.</div>
-              </div>
-              <span class="step-badge">Détail & API</span>
-            </div>
-
-            <!-- Étape 5 -->
-            <div class="timeline-step">
-              <span class="step-time">3:15 - 3:45</span>
-              <div class="step-content">
-                <div class="step-title">5. Calendrier Interactif (Vue Mensuelle & Pastilles Événements)</div>
-                <div class="step-desc">Navigation entre les mois, affichage des pastilles indicatrices terracotta et sélection interactive d'un jour pour voir ses événements.</div>
-              </div>
-              <span class="step-badge">Bonus Calendrier</span>
-            </div>
-
-            <!-- Étape 6 & 7 -->
-            <div class="timeline-step">
-              <span class="step-time">3:45 - 4:30</span>
-              <div class="step-content">
-                <div class="step-title">6. Persistance AsyncStorage, Suppression & Déconnexion Sécurisée</div>
-                <div class="step-desc">Fermeture/réouverture de l'app (preuve de persistance), suppression avec boîte de confirmation Oui/Non et déconnexion depuis le profil.</div>
-              </div>
-              <span class="step-badge">Persistance & Fin</span>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================================
-           SLIDE 5 : Fonctionnalités Bonus (7:30 - 8:15)
-           =================================================================== -->
-      <section class="slide" id="slide-5">
-        <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category">Au-delà du Cahier des Charges</span>
-            <h2 class="slide-title">4 Fonctionnalités Bonus Majeures</h2>
-          </div>
-          <span class="slide-time-tag">⏱️ 7:30 - 8:15 (45s)</span>
-        </div>
-
-        <div class="slide-body">
-          <div class="grid-4">
-            <!-- Bonus 1 : Calendrier -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-orange">📅</div>
-                <h3 class="card-title">Calendrier Mensuel</h3>
-              </div>
-              <p class="card-text">
-                Composant dynamique sur mesure : navigation entre les mois, calcul automatique des jours de la semaine, pastilles thématiques terracotta et filtrage au clic.
-              </p>
-            </div>
-
-            <!-- Bonus 2 : Météo Live -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-blue">☀️</div>
-                <h3 class="card-title">Météo API Direct</h3>
-              </div>
-              <p class="card-text">
-                Appel en direct de l'API Open-Meteo pour le lieu de l'événement. Traduction des codes météo WMO en français et affichage de la température exacte.
-              </p>
-            </div>
-
-            <!-- Bonus 3 : GPS & Haversine -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-green">📍</div>
-                <h3 class="card-title">GPS & Haversine</h3>
-              </div>
-              <p class="card-text">
-                Autorisation native <code>expo-location</code> demandée à l'ouverture. Calcul trigonométrique de la distance réelle entre l'utilisateur et le lieu (ex. 26,9 km).
-              </p>
-            </div>
-
-            <!-- Bonus 4 : Charte & Typo -->
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-purple">✨</div>
-                <h3 class="card-title">Charte & Nunito</h3>
-              </div>
-              <p class="card-text">
-                Police Google Fonts Nunito intégrée, Splash Screen personnalisé, micro-animations réactives et conformité pixel-perfect à la maquette.
-              </p>
-            </div>
-          </div>
-
-          <!-- Highlight démonstration technique -->
-          <div class="glass-card card-highlight">
-            <div class="card-header-icon">
-              <div class="icon-bubble bubble-green">⚡</div>
-              <h3 class="card-title">Exemple concret : Géocodage dynamique et calcul de distance</h3>
-            </div>
-            <p class="card-text">
-              Utilisateur situé à <strong>Wasquehal</strong> (50.6694°N, 3.1306°E) ➔ Événement à <strong>Courrières</strong> (50.4570°N, 2.9472°E) :<br>
-              L'application résout les coordonnées GPS réelles et applique la formule trigonométrique de Haversine pour afficher immédiatement <strong>26,9 km</strong> sur la carte de la page d'accueil et dans la page de détails.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================================
-           SLIDE 6 : Qualité du Code & Bonnes Pratiques (8:15 - 9:00)
-           =================================================================== -->
-      <section class="slide" id="slide-6">
-        <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category">Rigueur & Qualité Logicielle</span>
-            <h2 class="slide-title">Qualité du Code, Rigueur & Bonnes Pratiques</h2>
-          </div>
-          <span class="slide-time-tag">⏱️ 8:15 - 9:00 (45s)</span>
-        </div>
-
-        <div class="slide-body">
-          <div class="grid-3">
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-green">🛡️</div>
-                <h3 class="card-title">TypeScript Strict</h3>
-              </div>
-              <p class="card-text">
-                Typage exhaustif des modèles (<code>AppEvent</code>, <code>User</code>), des props et des paramètres de navigation React Navigation.<br><br>
-                <code style="color: #34d399; font-weight: bold;">npx tsc --noEmit : 0 ERREUR</code>
-              </p>
-            </div>
-
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-blue">🔍</div>
-                <h3 class="card-title">ESLint Zéro Avertissement</h3>
-              </div>
-              <p class="card-text">
-                Respect des standards stricts de React et Expo. Gestion rigoureuse des dépendances des hooks React.<br><br>
-                <code style="color: #38bdf8; font-weight: bold;">npx expo lint : 0 ERR / 0 WARN</code>
-              </p>
-            </div>
-
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-amber">🔔</div>
-                <h3 class="card-title">Règle 11 : Alertes Natives</h3>
-              </div>
-              <p class="card-text">
-                Toutes les confirmations critiques (suppression, abandon de saisie, désinscription, déconnexion) exploitent l'API native <code>Alert.alert</code> avec boutons explicites Oui/Non.
-              </p>
-            </div>
-          </div>
-
-          <div class="glass-card">
-            <div class="card-header-icon">
-              <div class="icon-bubble bubble-orange">📁</div>
-              <h3 class="card-title">Organisation Claire & Découplage des Responsabilités</h3>
-            </div>
-            <div style="display: flex; gap: 24px; font-size: 13px; color: var(--text-muted);">
-              <div>📁 <code>src/components/</code> (Composants réutilisables)</div>
-              <div>📁 <code>src/screens/</code> (7 écrans modulaires)</div>
-              <div>📁 <code>src/context/</code> (Gestion d'état propre)</div>
-              <div>📁 <code>src/services/</code> (Storage, Météo, Location)</div>
-              <div>📁 <code>src/constants/</code> (Design System 100%)</div>
-              <div>📁 <code>src/i18n/</code> (100% Textes FR)</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================================
-           SLIDE 7 : Bilan & Perspectives (9:00 - 9:30)
-           =================================================================== -->
-      <section class="slide" id="slide-7">
-        <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category">Bilan du Projet</span>
-            <h2 class="slide-title">Bilan des 4 Jours & Perspectives d'Évolution</h2>
-          </div>
-          <span class="slide-time-tag">⏱️ 9:00 - 9:30 (30s)</span>
-        </div>
-
-        <div class="slide-body">
-          <div class="grid-2">
-            <div class="glass-card card-highlight">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-green">🏆</div>
-                <h3 class="card-title">Ce que démontre ce projet</h3>
-              </div>
-              <ul class="feature-list">
-                <li><span class="badge-bullet">✓</span> <strong>Maîtrise de l'écosystème React Native & Expo :</strong> Déploiement direct sur mobile physique.</li>
-                <li><span class="badge-bullet">✓</span> <strong>Sens aigu de l'UX/UI :</strong> Respect minutieux de la charte graphique et accessibilité tactile (&ge; 44px).</li>
-                <li><span class="badge-bullet">✓</span> <strong>Rigueur d'ingénierie logicielle :</strong> Architecture KISS, maintenance facile et zéro dette technique.</li>
-                <li><span class="badge-bullet">✓</span> <strong>Capacité de livraison en temps contraint :</strong> 100% des attendus livrés dans les 4 jours impartis.</li>
-              </ul>
-            </div>
-
-            <div class="glass-card">
-              <div class="card-header-icon">
-                <div class="icon-bubble bubble-purple">🚀</div>
-                <h3 class="card-title">Évolutions futures envisagées</h3>
-              </div>
-              <ul class="feature-list">
-                <li><span class="badge-bullet">▪</span> <strong>Backend Cloud :</strong> Raccordement à une API REST / GraphQL (Node.js/NestJS ou Supabase).</li>
-                <li><span class="badge-bullet">▪</span> <strong>Notifications Push :</strong> Alertes automatiques de rappel d'événement 24h avant via Expo Push.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Partage & Médias :</strong> Prise de photo des événements et partage natif sur les réseaux sociaux.</li>
-                <li><span class="badge-bullet">▪</span> <strong>Mode Sombre automatique :</strong> Support dynamique du Dark Mode système.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================================
-           SLIDE 8 : Conclusion & Questions / Réponses (9:30 - 10:00)
-           =================================================================== -->
-      <section class="slide" id="slide-8">
-        <div class="slide-header">
-          <div class="slide-header-left">
-            <span class="slide-category">Fin de la Présentation</span>
-            <h2 class="slide-title">Conclusion & Échanges avec le Jury</h2>
-          </div>
-          <span class="slide-time-tag">⏱️ 9:30 - 10:00 (30s)</span>
-        </div>
-
-        <div class="slide-body" style="align-items: center; justify-content: center; text-align: center;">
-          <div style="max-width: 650px;">
-            <div style="font-size: 54px; margin-bottom: 12px;">🤝</div>
-            <h3 style="font-family: var(--font-heading); font-size: 30px; font-weight: 800; color: white; margin-bottom: 12px;">
-              Merci pour votre écoute et votre attention !
-            </h3>
-            <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6;">
-              Je suis à votre entière disposition pour répondre à toutes vos questions concernant l'architecture, les choix techniques ou la démonstration de l'application EventEase.
-            </p>
-
-            <!-- Antisèche Questions probables pour le candidat -->
-            <div class="glass-card" style="text-align: left; padding: 18px 24px;">
-              <div style="font-size: 12px; font-weight: 800; color: #fb923c; text-transform: uppercase; margin-bottom: 8px;">
-                💡 Antisèche technique pour les questions du jury :
-              </div>
-              <ul style="list-style: none; font-size: 12.5px; color: #cbd5e1; display: flex; flex-direction: column; gap: 6px;">
-                <li>• <em>« Pourquoi Context API plutôt que Redux ? »</em> ➔ Approche KISS : périmètre fonctionnel léger sans complexité superflue, idéal pour un prototype 4 jours.</li>
-                <li>• <em>« Comment gérez-vous le hors-ligne ? »</em> ➔ AsyncStorage persistant + cache mémoire de localisation pour une réactivité instantanée.</li>
-                <li>• <em>« Comment fonctionne le calcul de distance ? »</em> ➔ Coordonnées GPS + formule géodésique de Haversine avec rayon terrestre de 6 371 km.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Pied de page & Barre de contrôle -->
-    <footer class="bottom-bar">
-      <div class="progress-track" id="progressDots"></div>
-
-      <div class="nav-buttons">
-        <button class="btn-nav" id="prevBtn">← Précédent</button>
-        <span class="slide-counter" id="slideCounter">1 / 8</span>
-        <button class="btn-nav" id="nextBtn">Suivant →</button>
       </div>
+    </section>
 
-      <div style="font-size: 11px; color: var(--text-dim); display: flex; gap: 12px;">
-        <span>Flèches ⬅️ ➡️ ou Espace</span>
-        <span>•</span>
-        <span>P : Notes</span>
-        <span>•</span>
-        <span>M : Sommaire</span>
-        <span>•</span>
-        <span>F : Plein écran</span>
-      </div>
-    </footer>
-
-    <!-- Panneau rétractable : Notes Orateur (Speaker Notes) -->
-    <aside class="speaker-panel" id="speakerPanel">
-      <div class="speaker-header">
-        <div class="speaker-title">
-          <span>🎙️</span> Notes pour le Candidat (Script Oral)
+    <!-- ===================================================================
+         SLIDE 3 : Architecture & Choix Techniques (1m30)
+         =================================================================== -->
+    <section class="slide" id="slide-3" data-slide="3">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-category">02 • Architecture Technique</span>
+          <h2 class="slide-title">Choix Techniques & Structure</h2>
+          <p class="slide-description">Architecture modulaire, robuste et maintenable (Document technique synthétique).</p>
         </div>
-        <button class="btn-icon-tiny" onclick="document.getElementById('speakerPanel').classList.remove('open')">✕</button>
-      </div>
-      <div class="speaker-content" id="speakerContent">
-        <!-- Rempli dynamiquement par script.js selon le slide actif -->
-      </div>
-      <div class="speaker-tip">
-        <strong>Conseil jury :</strong> Maintenez le contact visuel, souriez et montrez l'écran du smartphone en direct pendant la démo !
-      </div>
-    </aside>
 
-    <!-- Modal Sommaire / Aperçu de tous les slides -->
-    <div class="overview-modal" id="overviewModal">
-      <div class="overview-grid" id="overviewGrid">
-        <!-- Rempli dynamiquement par script.js -->
+        <div class="grid-4">
+          <div class="tech-card">
+            <div class="tech-icon">⚛️</div>
+            <h4>React Native & Expo</h4>
+            <p>Expo SDK 57 pour un développement multiplateforme moderne et un accès simplifié aux API natives (GPS, fonts).</p>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-icon">🔷</div>
+            <h4>TypeScript Strict</h4>
+            <p>Typage intégral à 100% avec zéro avertissement. Modèles de données stricts pour les événements et la navigation.</p>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-icon">🧭</div>
+            <h4>React Navigation v7</h4>
+            <p>Structure déclarative découplée : Stack d'authentification conditionnelle, Bottom Tabs et Stack d'événements.</p>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-icon">💾</div>
+            <h4>AsyncStorage & State</h4>
+            <p>Context API natif (Auth & Events) couplé à AsyncStorage. Sauvegarde persistante et données démo initiales.</p>
+          </div>
+        </div>
+
+        <div class="banner-box">
+          <div class="banner-item">
+            <span class="banner-title">🎨 Design System</span>
+            <span class="banner-text">Charte officielle : Terracotta (#C2410C), Crème (#FFF8F0), Sauge (#3F7D58) et police Nunito.</span>
+          </div>
+          <div class="banner-item">
+            <span class="banner-title">🌐 Internationalisation (i18n)</span>
+            <span class="banner-text">100% des libellés externalisés dans un dictionnaire typé. Aucun texte en dur.</span>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <!-- ===================================================================
+         SLIDE 4 : Fonctionnalités & Bonus (1m30)
+         =================================================================== -->
+    <section class="slide" id="slide-4" data-slide="4">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-category">03 • Réalisations</span>
+          <h2 class="slide-title">Fonctionnalités Obligatoires & Bonus</h2>
+          <p class="slide-description">100% du cahier des charges couvert + l'ensemble des bonus recommandés.</p>
+        </div>
+
+        <div class="grid-2">
+          <!-- Socle obligatoire -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <span class="badge-success">Socle Obligatoire</span>
+              <h3>Fonctionnalités Métier</h3>
+            </div>
+            <ul class="feature-checklist">
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Authentification locale :</strong> Inscription, connexion persistée et protection des routes.
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Catalogue d'événements :</strong> Liste dynamique avec filtres réactifs (Tous, À venir, Inscrits).
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>CRUD complet :</strong> Création, modification, consultation détaillée et suppression d'événement.
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Gestion des participations :</strong> Bouton « Je participe » / « Inscrit » avec confirmation.
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong>Persistance locale :</strong> Sauvegarde transparente de l'état via AsyncStorage.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Bonus réalisés -->
+          <div class="panel-card highlight-panel">
+            <div class="panel-header">
+              <span class="badge-accent">Bonus Réalisés</span>
+              <h3>Valeur Ajoutée & UX</h3>
+            </div>
+            <ul class="feature-checklist">
+              <li>
+                <span class="check-accent">★</span>
+                <div>
+                  <strong>Calendrier interactif mensuel :</strong> Matrice sur-mesure, navigation par mois et pastilles d'événements.
+                </div>
+              </li>
+              <li>
+                <span class="check-accent">★</span>
+                <div>
+                  <strong>Météo en temps réel :</strong> Intégration API Open-Meteo avec géocodage et libellés français WMO.
+                </div>
+              </li>
+              <li>
+                <span class="check-accent">★</span>
+                <div>
+                  <strong>Géolocalisation & Distance :</strong> GPS natif et calcul de distance réelle via la formule de Haversine.
+                </div>
+              </li>
+              <li>
+                <span class="check-accent">★</span>
+                <div>
+                  <strong>UX & Sécurité :</strong> Alertes natives Oui/Non (confirmation d'abandon de saisie et de suppression).
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SLIDE 5 : Démonstration en Direct (4-5 min)
+         =================================================================== -->
+    <section class="slide" id="slide-5" data-slide="5">
+      <div class="slide-content demo-slide">
+        <div class="slide-header text-center">
+          <div class="badge-pill pulse">
+            <span>📱</span> DÉMONSTRATION EN DIRECT • 5 MINUTES
+          </div>
+          <h2 class="slide-title">Place à l'Application Mobile</h2>
+          <p class="slide-description">Démonstration en temps réel sur l'appareil mobile (Expo Go).</p>
+        </div>
+
+        <div class="demo-steps-grid">
+          <div class="demo-step-card">
+            <div class="step-number">1</div>
+            <h4>Accueil & GPS</h4>
+            <p>Demande d'autorisation GPS native, calcul des distances réelles et filtres réactifs.</p>
+          </div>
+
+          <div class="demo-step-card">
+            <div class="step-number">2</div>
+            <h4>Cycle CRUD</h4>
+            <p>Création d'un événement, sécurité anti-perte de saisie et modification en temps réel.</p>
+          </div>
+
+          <div class="demo-step-card">
+            <div class="step-number">3</div>
+            <h4>Participation & Météo</h4>
+            <p>Météo en direct sur le détail de l'événement et bascule d'inscription avec confirmation.</p>
+          </div>
+
+          <div class="demo-step-card">
+            <div class="step-number">4</div>
+            <h4>Calendrier & Persistance</h4>
+            <p>Vue mensuelle interactive, relance de l'app prouvant la persistance des données.</p>
+          </div>
+        </div>
+
+        <div class="demo-callout">
+          <span>💡</span> <strong>Compte de démonstration :</strong> livio.delenclos@test.fr (ou création libre d'un compte)
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SLIDE 6 : Qualité du Code & Bonnes Pratiques (1m30)
+         =================================================================== -->
+    <section class="slide" id="slide-6" data-slide="6">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-category">04 • Qualité Logicielle</span>
+          <h2 class="slide-title">Bonnes Pratiques & Rigueur</h2>
+          <p class="slide-description">Développement respectant les standards professionnels et les bonnes pratiques.</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="quality-card">
+            <div class="q-icon">🛡️</div>
+            <h3>Typage Strict & Zéro Erreur</h3>
+            <p>Validation TypeScript rigoureuse sans compromis :</p>
+            <ul class="clean-list">
+              <li><strong>0 erreur</strong> TypeScript (tsc --noEmit)</li>
+              <li><strong>0 avertissement</strong> ESLint</li>
+              <li>Contrats de types stricts pour l'API et la navigation</li>
+            </ul>
+          </div>
+
+          <div class="quality-card">
+            <div class="q-icon">🧩</div>
+            <h3>Modularité & Maintenabilité</h3>
+            <p>Organisation claire des responsabilités :</p>
+            <ul class="clean-list">
+              <li>Composants réutilisables (Button, Input, Card)</li>
+              <li>Couche de services isolée (Storage, Weather, GPS)</li>
+              <li>Code clair, structuré et commenté en français</li>
+            </ul>
+          </div>
+
+          <div class="quality-card">
+            <div class="q-icon">👌</div>
+            <h3>Ergonomie & Robustesse</h3>
+            <p>Expérience utilisateur soignée :</p>
+            <ul class="clean-list">
+              <li>Cibles tactiles conformes (≥ 44 × 44 px)</li>
+              <li>Repli gracieux hors-ligne si réseau absent</li>
+              <li>Dictionnaire i18n sans chaînes en dur</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SLIDE 7 : Bilan & Conclusion (1 min)
+         =================================================================== -->
+    <section class="slide" id="slide-7" data-slide="7">
+      <div class="slide-content conclusion-slide">
+        <div class="slide-header text-center">
+          <span class="slide-category">05 • Bilan & Clôture</span>
+          <h2 class="slide-title">Bilan du Projet</h2>
+          <p class="slide-description">Un prototype abouti, testé et prêt à évoluer.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="summary-card">
+            <h3>✅ Objectifs 100% Remplis</h3>
+            <ul class="clean-list big-list">
+              <li><strong>Socle complet :</strong> Auth, Catalogue, CRUD, Participation, Persistance.</li>
+              <li><strong>Tous les bonus livrés :</strong> Calendrier, Météo API, Géolocalisation Haversine, Design soigné.</li>
+              <li><strong>Délai tenu :</strong> Projet livré et validé dans le cadre des 4 jours.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h3>🚀 Perspectives d'Évolution</h3>
+            <ul class="clean-list big-list">
+              <li><strong>Backend Cloud :</strong> Synchronisation temps réel via Supabase ou Firebase.</li>
+              <li><strong>Notifications Push :</strong> Rappels des événements auxquels l'adhérent participe.</li>
+              <li><strong>Rôles avancés :</strong> Gestion des droits (organisateur, bénévole, visiteur).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thank-you-box">
+          <h3>Merci pour votre attention !</h3>
+          <p>Je suis à votre disposition pour vos questions et échanges.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Barre de navigation épurée (Diapo classique) -->
+  <footer class="deck-controls">
+    <div class="controls-left">
+      <button class="nav-btn" id="prevBtn" title="Slide précédente (Flèche gauche)">
+        <span>←</span> Précédent
+      </button>
+      <div class="slide-counter">
+        <span id="currentSlideNum">1</span> / <span id="totalSlidesNum">7</span>
+      </div>
+      <button class="nav-btn primary-nav-btn" id="nextBtn" title="Slide suivante (Flèche droite ou Espace)">
+        Suivant <span>→</span>
+      </button>
     </div>
 
-  </div>
+    <!-- Mini-indicateur de points de progression -->
+    <div class="slide-dots" id="slideDots"></div>
+
+    <div class="controls-right">
+      <!-- Chronomètre discret 10 min -->
+      <div class="timer-chip" id="timerChip" title="Cliquer pour démarrer / mettre en pause le chronomètre 10 min">
+        <span class="timer-icon">⏱️</span>
+        <span class="timer-text" id="timerDisplay">10:00</span>
+        <button class="timer-reset-icon" id="timerReset" title="Réinitialiser le chrono">↺</button>
+      </div>
+
+      <!-- Bouton Plein Écran -->
+      <button class="icon-btn" id="fullscreenBtn" title="Plein écran (F)">
+        ⛶
+      </button>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>

@@ -226,9 +226,10 @@ Le projet a été développé selon des critères stricts de qualité logicielle
 
 ## 🎤 Présentation de Soutenance
 
-Pour visualiser le support de soutenance interactif :
-- Ouvrez simplement le fichier `presentation.html` dans n'importe quel navigateur moderne pour accéder au **Cockpit Candidat** (chronomètre 10 min, scénario démo 4m30, notes d'orateur mot à mot via la touche `P`).
-- Ouvrez `jury.html` pour la **Vue Jury** épurée destinée à la projection.
+Pour lancer le diaporama officiel de soutenance (format 10 minutes, démo comprise) :
+- Ouvrez simplement le fichier `presentation.html` (ou `presentation/index.html`) dans n'importe quel navigateur.
+- Diaporama classique épuré (7 slides), fluide et calibré pour l'épreuve orale.
+- Navigation intuitive : touches Flèches (Gauche/Droite), Espace, ou barre de contrôles inférieure (chronomètre 10 min discret et plein écran `F`).
 
 ---
 
